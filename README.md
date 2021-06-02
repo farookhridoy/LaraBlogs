@@ -3,7 +3,7 @@
 
 ## About Repository
 
-A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA Application.
+A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Blogs template for SPA Application.
 <p align="center">
 <img src="https://i.imgur.com/mZAHbUL.png">
 <img src="https://i.imgur.com/3hhoQnq.png">
