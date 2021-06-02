@@ -10,10 +10,10 @@
       </li>
 
       <li class="nav-item">
-        <router-link to="/products" class="nav-link">
+        <router-link to="/blogs" class="nav-link">
           <i class="nav-icon fas fa-list orange"></i>
           <p>
-            Product
+            Blogs
           </p>
         </router-link>
       </li>
@@ -70,8 +70,6 @@
 
       @endcan
       
-      
-
       <li class="nav-item">
         <a href="#" class="nav-link" onclick="event.preventDefault();
           document.getElementById('logout-form').submit();">

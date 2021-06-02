@@ -11,7 +11,8 @@ class ProductController extends BaseController
 {
 
     protected $product = '';
-
+    protected $blog_image_path;
+    protected $blog_image_relative_path;
     /**
      * Create a new controller instance.
      *
@@ -21,6 +22,9 @@ class ProductController extends BaseController
     {
         $this->middleware('auth:api');
         $this->product = $product;
+
+        $this->category_image_path = public_path('uploads/category');
+        $this->category_image_relative_path = '/uploads/category';
     }
 
     /**
