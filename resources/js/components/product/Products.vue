@@ -34,12 +34,14 @@
                                 <tbody>
                                     <tr v-for="product in products.data" :key="product.id">
 
-                                        <td>{{product.id}}</td>
-                                        <td>{{product.name}}</td>
-                                        <td>{{product.description | truncate(30, '...')}}</td>
-                                        <td>{{product.category.name}}</td>
-                                        <td>{{product.price}}</td>
-                                        <td><img v-if="product.photo" :src="`uploads/product/${product.photo}`" class="profile-user-img img-fluid img-circle" style="height:40px; width:40px;"/></td>
+                                        <td>{{ product.id }}</td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.description | truncate(30, '...') }}</td>
+                                        <td>{{ product.category.name }}</td>
+                                        <td>{{ product.price }}</td>
+                                        <td><img v-if="product.photo" :src="`upload/product/${product.photo}`"
+                                                class="profile-user-img img-fluid img-circle"
+                                                style="height:40px; width:40px;" /></td>
                                         <td>
 
                                             <a href="#" @click="editModal(product)">
@@ -75,55 +77,51 @@
                             </button>
                         </div>
 
-                        <form @submit.prevent="editmode ? updateProduct() : createProduct()">
+                        <form @submit.prevent="editmode ? updateProduct() : createProduct()"
+                            enctype="multipart/form-data">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label>Name</label>
-                                    <input v-model="form.name" type="text" name="name"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
+                                    <input v-model="form.name" type="text" name="name" class="form-control"
+                                        :class="{ 'is-invalid': form.errors.has('name') }">
                                     <has-error :form="form" field="name"></has-error>
                                 </div>
                                 <div class="form-group">
                                     <label>Description</label>
                                     <input v-model="form.description" type="text" name="description"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('description') }">
+                                        class="form-control" :class="{ 'is-invalid': form.errors.has('description') }">
                                     <has-error :form="form" field="description"></has-error>
                                 </div>
                                 <div class="form-group">
                                     <label>Price</label>
-                                    <input v-model="form.price" type="text" name="price"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('price') }">
+                                    <input v-model="form.price" type="text" name="price" class="form-control"
+                                        :class="{ 'is-invalid': form.errors.has('price') }">
                                     <has-error :form="form" field="price"></has-error>
                                 </div>
                                 <div class="form-group">
 
                                     <label>Category</label>
                                     <select class="form-control" v-model="form.category_id">
-                                        <option 
-                                        v-for="(cat,index) in categories" :key="index"
-                                        :value="index"
-                                        :selected="index == form.category_id">{{ cat }}</option>
+                                        <option v-for="(cat, index) in categories" :key="index" :value="index"
+                                            :selected="index == form.category_id">{{ cat }}</option>
                                     </select>
                                     <has-error :form="form" field="category_id"></has-error>
                                 </div>
                                 <div class="form-group">
                                     <label>Tags</label>
-                                    <vue-tags-input
-                                    v-model="form.tag"
-                                    :tags="form.tags"
-                                    :autocomplete-items="filteredItems"
-                                    @tags-changed="newTags => form.tags = newTags"
-                                    />
+                                    <vue-tags-input v-model="form.tag" :tags="form.tags"
+                                        :autocomplete-items="filteredItems"
+                                        @tags-changed="newTags => form.tags = newTags" />
                                     <has-error :form="form" field="tags"></has-error>
                                 </div>
 
                                 <div class="form-group">
-                                    <input type="file" @change="uploadPhoto" name="photo" id="photo" class="form-control" :class="{'is-invalid': form.errors.has('photo')}"
-                                    />
+                                    <input type="file" @change="uploadPhoto" name="photo" id="photo"
+                                        class="form-control" :class="{ 'is-invalid': form.errors.has('photo') }" />
                                     <has-error :form="form" field="photo"></has-error>
                                 </div>
                                 <div class="avatar img-fluid img-circle" style="margin-top:10px">
-                                    <img :src="getPhoto()" :style="{ height: '100px', width: '100px' }"/>
+                                    <img :src="getPhoto()" :style="{ height: '100px', width: '100px' }" />
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -146,16 +144,16 @@ export default {
     components: {
         VueTagsInput,
     },
-    data () {
+    data() {
         return {
             editmode: false,
-            products : {},
+            products: {},
             form: new Form({
-                id : '',
-                category : '',
+                id: '',
+                category: '',
                 name: '',
                 description: '',
-                tags:  [],
+                tags: [],
                 photo: '',
                 category_id: '',
                 price: '',
@@ -163,7 +161,7 @@ export default {
             }),
             categories: [],
 
-            tag:  '',
+            tag: '',
             autocompleteItems: [],
         }
     },
@@ -177,13 +175,13 @@ export default {
 
             this.$Progress.finish();
         },
-        loadProducts(){
+        loadProducts() {
             axios.get("api/product").then(({ data }) => (this.products = data.data));
         },
-        loadCategories(){
+        loadCategories() {
             axios.get("/api/category/list").then(({ data }) => (this.categories = data.data));
         },
-        loadTags(){
+        loadTags() {
             axios.get("/api/tag/list").then(response => {
                 this.autocompleteItems = response.data.data.map(a => {
                     return { text: a.name, id: a.id };
@@ -207,76 +205,76 @@ export default {
         getPhoto() {
             if (this.form.photo) {
                 let photo =
-                this.form.photo.length > 100
-                ? this.form.photo
-                : "uploads/product/" + this.form.photo;
+                    this.form.photo.length > 100
+                        ? this.form.photo
+                        : "upload/product/" + this.form.photo;
                 return photo;
             }
         },
-        editModal(product){
+        editModal(product) {
             this.editmode = true;
             this.form.reset();
             $('#addNew').modal('show');
             this.form.fill(product);
         },
-        newModal(){
+        newModal() {
             this.editmode = false;
             this.form.reset();
             $('#addNew').modal('show');
         },
-        createProduct(){
+        createProduct() {
             this.$Progress.start();
 
             this.form.post('api/product')
-            .then((data)=>{
-                if(data.data.success){
-                    $('#addNew').modal('hide');
+                .then((data) => {
+                    if (data.data.success) {
+                        $('#addNew').modal('hide');
 
-                    Toast.fire({
-                        icon: 'success',
-                        title: data.data.message
-                    });
-                    this.$Progress.finish();
-                    this.loadProducts();
+                        Toast.fire({
+                            icon: 'success',
+                            title: data.data.message
+                        });
+                        this.$Progress.finish();
+                        this.loadProducts();
 
-                } else {
+                    } else {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Some error occured! Please try again'
+                        });
+
+                        this.$Progress.failed();
+                    }
+                })
+                .catch(() => {
+
                     Toast.fire({
                         icon: 'error',
                         title: 'Some error occured! Please try again'
                     });
-
-                    this.$Progress.failed();
-                }
-            })
-            .catch(()=>{
-
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Some error occured! Please try again'
-                });
-            })
+                })
         },
-        updateProduct(){
+        updateProduct() {
             this.$Progress.start();
-            this.form.put('api/product/'+this.form.id)
-            .then((response) => {
+            this.form.put('api/product/' + this.form.id)
+                .then((response) => {
 
-                $('#addNew').modal('hide');
-                Toast.fire({
-                    icon: 'success',
-                    title: response.data.message
+                    $('#addNew').modal('hide');
+                    Toast.fire({
+                        icon: 'success',
+                        title: response.data.message
+                    });
+                    this.$Progress.finish();
+
+
+                    this.loadProducts();
+                })
+                .catch(() => {
+                    this.$Progress.fail();
                 });
-                this.$Progress.finish();
-
-
-                this.loadProducts();
-            })
-            .catch(() => {
-                this.$Progress.fail();
-            });
 
         },
-        deleteProduct(id){
+        deleteProduct(id) {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -288,15 +286,15 @@ export default {
 
 
                 if (result.value) {
-                    this.form.delete('api/product/'+id).then(()=>{
+                    this.form.delete('api/product/' + id).then(() => {
                         Swal.fire(
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
-                            );
+                        );
 
                         this.loadProducts();
-                    }).catch((data)=> {
+                    }).catch((data) => {
                         Swal.fire("Failed!", data.message, "warning");
                     });
                 }

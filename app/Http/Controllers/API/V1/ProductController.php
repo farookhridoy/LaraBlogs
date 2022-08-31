@@ -6,6 +6,7 @@ use App\Http\Requests\Products\ProductRequest;
 use App\Models\Product;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use File;
 
 class ProductController extends BaseController
 {
@@ -47,11 +48,22 @@ class ProductController extends BaseController
      */
     public function store(ProductRequest $request)
     {
+
+        if ($request->get('photo')) {
+            $image = $request->get('photo');
+            $name = time() . '.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            \Image::make($request->get('photo'))->save(public_path('upload/product/') . $name);
+            $photo = $name;
+        } else {
+            $photo = '';
+        }
+
         $product = $this->product->create([
             'name' => $request->get('name'),
             'description' => $request->get('description'),
             'price' => $request->get('price'),
             'category_id' => $request->get('category_id'),
+            'photo' => $photo,
         ]);
 
         // update pivot table
@@ -94,9 +106,27 @@ class ProductController extends BaseController
      */
     public function update(ProductRequest $request, $id)
     {
+        $input = $request->all();
+
         $product = $this->product->findOrFail($id);
 
-        $product->update($request->all());
+        if ($request->get('photo')) {
+
+            //delete file
+            $image_path = public_path("upload/product/") . $product->photo;
+            if (\File::exists($image_path)) {
+                \File::delete($image_path);
+            }
+            //upload file
+            $image = $request->get('photo');
+            $name = time() . '.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            \Image::make($request->get('photo'))->save(public_path('upload/product/') . $name);
+            $input['photo'] = $name;
+        } else {
+            $input['photo'] = '';
+        }
+
+        $product->update($input);
 
         // update pivot table
         $tag_ids = [];
@@ -127,6 +157,11 @@ class ProductController extends BaseController
         $this->authorize('isAdmin');
 
         $product = $this->product->findOrFail($id);
+
+        $image_path = public_path("upload/product/") . $product->photo;
+        if (\File::exists($image_path)) {
+            \File::delete($image_path);
+        }
 
         $product->delete();
 
