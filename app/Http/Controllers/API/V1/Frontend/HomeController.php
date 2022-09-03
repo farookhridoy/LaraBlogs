@@ -32,4 +32,11 @@ class HomeController extends BaseController
 
         return $this->sendResponse($products, 'Product list');
     }
+
+    public function productDetails($id)
+    {
+        $product = Product::where('id', $id)->latest()->with('category', 'tags')->first();
+
+        return $this->sendResponse($product, 'Product');
+    }
 }

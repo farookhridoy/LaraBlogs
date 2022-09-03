@@ -46,4 +46,5 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
 
 Route::namespace('App\\Http\\Controllers\\API\V1\Frontend')->group(function () {
     Route::get('product', 'HomeController@index');
+    Route::get('product/{id}', 'HomeController@productDetails');
 });
