@@ -88,16 +88,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Description</label>
-                                    <input v-model="form.description" type="text" name="description"
+                                    <textarea v-model="form.description" type="text" name="description"
                                         class="form-control" :class="{ 'is-invalid': form.errors.has('description') }">
+                                    </textarea>
                                     <has-error :form="form" field="description"></has-error>
                                 </div>
-                                <div class="form-group">
-                                    <label>Price</label>
-                                    <input v-model="form.price" type="text" name="price" class="form-control"
-                                        :class="{ 'is-invalid': form.errors.has('price') }">
-                                    <has-error :form="form" field="price"></has-error>
-                                </div>
+
                                 <div class="form-group">
 
                                     <label>Category</label>
@@ -156,7 +152,6 @@ export default {
                 tags: [],
                 photo: '',
                 category_id: '',
-                price: '',
                 photoUrl: '',
             }),
             categories: [],

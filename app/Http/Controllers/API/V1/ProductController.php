@@ -61,7 +61,6 @@ class ProductController extends BaseController
         $product = $this->product->create([
             'name' => $request->get('name'),
             'description' => $request->get('description'),
-            'price' => $request->get('price'),
             'category_id' => $request->get('category_id'),
             'photo' => $photo,
         ]);

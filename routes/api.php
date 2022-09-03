@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -41,4 +42,8 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
         'tag' => 'TagController',
         'team' => 'TeamController',
     ]);
+});
+
+Route::namespace('App\\Http\\Controllers\\API\V1\Frontend')->group(function () {
+    Route::get('product', 'HomeController@index');
 });
